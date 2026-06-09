@@ -14,10 +14,13 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedNotesRouteImport } from './routes/_authenticated/notes'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedFeedRouteImport } from './routes/_authenticated/feed'
+import { Route as AuthenticatedEmploiDuTempsRouteImport } from './routes/_authenticated/emploi-du-temps'
 import { Route as AuthenticatedDisciplineRouteImport } from './routes/_authenticated/discipline'
 import { Route as AuthenticatedDevoirsRouteImport } from './routes/_authenticated/devoirs'
 import { Route as AuthenticatedClassesRouteImport } from './routes/_authenticated/classes'
+import { Route as AuthenticatedCahierDeTextesRouteImport } from './routes/_authenticated/cahier-de-textes'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const AuthRoute = AuthRouteImport.update({
@@ -44,11 +47,22 @@ const AuthenticatedNotesRoute = AuthenticatedNotesRouteImport.update({
   path: '/notes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedFeedRoute = AuthenticatedFeedRouteImport.update({
   id: '/feed',
   path: '/feed',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedEmploiDuTempsRoute =
+  AuthenticatedEmploiDuTempsRouteImport.update({
+    id: '/emploi-du-temps',
+    path: '/emploi-du-temps',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDisciplineRoute = AuthenticatedDisciplineRouteImport.update({
   id: '/discipline',
   path: '/discipline',
@@ -64,6 +78,12 @@ const AuthenticatedClassesRoute = AuthenticatedClassesRouteImport.update({
   path: '/classes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCahierDeTextesRoute =
+  AuthenticatedCahierDeTextesRouteImport.update({
+    id: '/cahier-de-textes',
+    path: '/cahier-de-textes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -74,10 +94,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/classes': typeof AuthenticatedClassesRoute
   '/devoirs': typeof AuthenticatedDevoirsRoute
   '/discipline': typeof AuthenticatedDisciplineRoute
+  '/emploi-du-temps': typeof AuthenticatedEmploiDuTempsRoute
   '/feed': typeof AuthenticatedFeedRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/notes': typeof AuthenticatedNotesRoute
   '/profil': typeof AuthenticatedProfilRoute
 }
@@ -85,10 +108,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/classes': typeof AuthenticatedClassesRoute
   '/devoirs': typeof AuthenticatedDevoirsRoute
   '/discipline': typeof AuthenticatedDisciplineRoute
+  '/emploi-du-temps': typeof AuthenticatedEmploiDuTempsRoute
   '/feed': typeof AuthenticatedFeedRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/notes': typeof AuthenticatedNotesRoute
   '/profil': typeof AuthenticatedProfilRoute
 }
@@ -98,10 +124,13 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/_authenticated/classes': typeof AuthenticatedClassesRoute
   '/_authenticated/devoirs': typeof AuthenticatedDevoirsRoute
   '/_authenticated/discipline': typeof AuthenticatedDisciplineRoute
+  '/_authenticated/emploi-du-temps': typeof AuthenticatedEmploiDuTempsRoute
   '/_authenticated/feed': typeof AuthenticatedFeedRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/notes': typeof AuthenticatedNotesRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
 }
@@ -111,10 +140,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
+    | '/cahier-de-textes'
     | '/classes'
     | '/devoirs'
     | '/discipline'
+    | '/emploi-du-temps'
     | '/feed'
+    | '/messages'
     | '/notes'
     | '/profil'
   fileRoutesByTo: FileRoutesByTo
@@ -122,10 +154,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
+    | '/cahier-de-textes'
     | '/classes'
     | '/devoirs'
     | '/discipline'
+    | '/emploi-du-temps'
     | '/feed'
+    | '/messages'
     | '/notes'
     | '/profil'
   id:
@@ -134,10 +169,13 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
+    | '/_authenticated/cahier-de-textes'
     | '/_authenticated/classes'
     | '/_authenticated/devoirs'
     | '/_authenticated/discipline'
+    | '/_authenticated/emploi-du-temps'
     | '/_authenticated/feed'
+    | '/_authenticated/messages'
     | '/_authenticated/notes'
     | '/_authenticated/profil'
   fileRoutesById: FileRoutesById
@@ -185,11 +223,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNotesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/feed': {
       id: '/_authenticated/feed'
       path: '/feed'
       fullPath: '/feed'
       preLoaderRoute: typeof AuthenticatedFeedRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/emploi-du-temps': {
+      id: '/_authenticated/emploi-du-temps'
+      path: '/emploi-du-temps'
+      fullPath: '/emploi-du-temps'
+      preLoaderRoute: typeof AuthenticatedEmploiDuTempsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/discipline': {
@@ -213,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedClassesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/cahier-de-textes': {
+      id: '/_authenticated/cahier-de-textes'
+      path: '/cahier-de-textes'
+      fullPath: '/cahier-de-textes'
+      preLoaderRoute: typeof AuthenticatedCahierDeTextesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -225,20 +284,26 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedCahierDeTextesRoute: typeof AuthenticatedCahierDeTextesRoute
   AuthenticatedClassesRoute: typeof AuthenticatedClassesRoute
   AuthenticatedDevoirsRoute: typeof AuthenticatedDevoirsRoute
   AuthenticatedDisciplineRoute: typeof AuthenticatedDisciplineRoute
+  AuthenticatedEmploiDuTempsRoute: typeof AuthenticatedEmploiDuTempsRoute
   AuthenticatedFeedRoute: typeof AuthenticatedFeedRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedNotesRoute: typeof AuthenticatedNotesRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedCahierDeTextesRoute: AuthenticatedCahierDeTextesRoute,
   AuthenticatedClassesRoute: AuthenticatedClassesRoute,
   AuthenticatedDevoirsRoute: AuthenticatedDevoirsRoute,
   AuthenticatedDisciplineRoute: AuthenticatedDisciplineRoute,
+  AuthenticatedEmploiDuTempsRoute: AuthenticatedEmploiDuTempsRoute,
   AuthenticatedFeedRoute: AuthenticatedFeedRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedNotesRoute: AuthenticatedNotesRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
 }
@@ -254,3 +319,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
