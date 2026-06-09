@@ -77,16 +77,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Scholar" },
-      { name: "description", content: "Campus Canvas is a modern, secure student social network and school platform for colleges and high schools." },
+      { title: "Techn301 — Vie scolaire" },
+      { name: "description", content: "Techn301 : la plateforme de vie scolaire de la classe — devoirs, notes, fil d'actualité et vie de classe." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Scholar" },
-      { property: "og:description", content: "Campus Canvas is a modern, secure student social network and school platform for colleges and high schools." },
+      { property: "og:title", content: "Techn301 — Vie scolaire" },
+      { property: "og:description", content: "Devoirs, notes, fil d'actualité et vie de classe pour la Techn301." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Scholar" },
-      { name: "twitter:description", content: "Campus Canvas is a modern, secure student social network and school platform for colleges and high schools." },
+      { name: "twitter:title", content: "Techn301 — Vie scolaire" },
+      { name: "twitter:description", content: "Devoirs, notes, fil d'actualité et vie de classe pour la Techn301." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1e8c4319-d44f-4746-b414-a6c88dd5ec32/id-preview-f4bc6e7a--872d54f3-ecbd-4b02-8f09-80263de2f121.lovable.app-1781025853079.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1e8c4319-d44f-4746-b414-a6c88dd5ec32/id-preview-f4bc6e7a--872d54f3-ecbd-4b02-8f09-80263de2f121.lovable.app-1781025853079.png" },
     ],
@@ -105,8 +105,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              'try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}',
+          }}
+        />
         <HeadContent />
       </head>
       <body>
