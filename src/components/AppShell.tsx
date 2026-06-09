@@ -15,12 +15,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useMyProfile, useMyRoles, hasRole } from "@/hooks/use-profile";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { ChangePasswordGate } from "@/components/ChangePasswordGate";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { data: profile } = useMyProfile(user?.id);
   const { data: roles } = useMyRoles(user?.id);
   const router = useRouter();
+
+  const mustChangePassword = !!user?.user_metadata?.must_change_password;
 
   const isAdmin = hasRole(roles, "admin");
   const isProf = hasRole(roles, "professeur");
@@ -42,6 +46,10 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const initial = (profile?.full_name || user?.email || "?").charAt(0).toUpperCase();
 
+  if (mustChangePassword) {
+    return <ChangePasswordGate />;
+  }
+
   return (
     <div className="min-h-dvh">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-6 px-4 py-6 md:flex-row md:px-6 md:py-8">
@@ -49,11 +57,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         <aside className="glass rounded-3xl p-4 md:sticky md:top-6 md:h-[calc(100dvh-3rem)] md:w-64 md:shrink-0">
           <div className="mb-6 flex items-center gap-3 px-2 pt-2">
             <div className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground font-semibold">
-              S
+              T
             </div>
             <div>
-              <p className="text-sm font-semibold leading-tight">Scholar</p>
-              <p className="text-xs text-muted-foreground leading-tight">Espace scolaire</p>
+              <p className="text-sm font-semibold leading-tight">Techn301</p>
+              <p className="text-xs text-muted-foreground leading-tight">Vie scolaire 3e</p>
             </div>
           </div>
 
@@ -97,11 +105,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </p>
               </div>
             </Link>
+            <ThemeToggle withLabel />
             <Button
               variant="ghost"
               size="sm"
               onClick={signOut}
-              className="mt-2 w-full justify-start gap-2 text-muted-foreground"
+              className="mt-1 w-full justify-start gap-2 text-muted-foreground"
             >
               <LogOut className="size-4" />
               Se déconnecter

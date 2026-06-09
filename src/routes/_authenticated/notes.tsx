@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/notes")({
-  head: () => ({ meta: [{ title: "Notes — Scholar" }] }),
+  head: () => ({ meta: [{ title: "Notes — Techn301" }] }),
   component: NotesPage,
 });
 

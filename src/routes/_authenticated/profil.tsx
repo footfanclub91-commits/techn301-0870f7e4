@@ -16,7 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/profil")({
-  head: () => ({ meta: [{ title: "Mon profil — Scholar" }] }),
+  head: () => ({ meta: [{ title: "Mon profil — Techn301" }] }),
   component: Page,
 });
 

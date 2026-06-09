@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/devoirs")({
-  head: () => ({ meta: [{ title: "Devoirs — Scholar" }] }),
+  head: () => ({ meta: [{ title: "Devoirs — Techn301" }] }),
   component: DevoirsPage,
 });
 

@@ -14,7 +14,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/feed")({
-  head: () => ({ meta: [{ title: "Fil d'actualité — Scholar" }] }),
+  head: () => ({ meta: [{ title: "Fil d'actualité — Techn301" }] }),
   component: FeedPage,
 });
 
