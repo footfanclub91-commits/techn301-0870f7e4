@@ -10,6 +10,9 @@ import {
   LogOut,
   User as UserIcon,
   School,
+  CalendarDays,
+  NotebookPen,
+  MessageSquare,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -32,6 +35,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const nav = [
     { to: "/feed", label: "Fil d'actualité", icon: Home, show: true },
+    { to: "/messages", label: "Messages", icon: MessageSquare, show: true },
+    { to: "/emploi-du-temps", label: "Emploi du temps", icon: CalendarDays, show: true },
+    { to: "/cahier-de-textes", label: "Cahier de textes", icon: NotebookPen, show: true },
     { to: "/devoirs", label: "Devoirs", icon: BookOpen, show: true },
     { to: "/notes", label: "Notes", icon: GraduationCap, show: true },
     { to: "/classes", label: "Classes", icon: School, show: true },
