@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/AppShell";
 import { SignedImage } from "@/components/SignedImage";
 
 export const Route = createFileRoute("/_authenticated/classes")({
-  head: () => ({ meta: [{ title: "Classes — Scholar" }] }),
+  head: () => ({ meta: [{ title: "Classes — Techn301" }] }),
   component: Page,
 });
 
