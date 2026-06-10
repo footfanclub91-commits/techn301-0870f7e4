@@ -41,6 +41,93 @@ export type Database = {
         }
         Relationships: []
       }
+      bulletins: {
+        Row: {
+          author_id: string
+          created_at: string
+          general_appreciation: string | null
+          id: string
+          period: string
+          published: boolean
+          student_id: string
+          subjects: Json
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          general_appreciation?: string | null
+          id?: string
+          period: string
+          published?: boolean
+          student_id: string
+          subjects?: Json
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          general_appreciation?: string | null
+          id?: string
+          period?: string
+          published?: boolean
+          student_id?: string
+          subjects?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      call_entries: {
+        Row: {
+          category: Database["public"]["Enums"]["call_category"]
+          class_id: string | null
+          created_at: string
+          date: string
+          id: string
+          message: string | null
+          student_id: string
+          subject_id: string | null
+          teacher_id: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["call_category"]
+          class_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          message?: string | null
+          student_id: string
+          subject_id?: string | null
+          teacher_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["call_category"]
+          class_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          message?: string | null
+          student_id?: string
+          subject_id?: string | null
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_entries_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "call_entries_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_subjects: {
         Row: {
           class_id: string
@@ -528,6 +615,7 @@ export type Database = {
           id: string
           image_url: string | null
           scope: Database["public"]["Enums"]["post_scope"]
+          shared_grade_id: string | null
         }
         Insert: {
           author_id: string
@@ -537,6 +625,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           scope?: Database["public"]["Enums"]["post_scope"]
+          shared_grade_id?: string | null
         }
         Update: {
           author_id?: string
@@ -546,6 +635,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           scope?: Database["public"]["Enums"]["post_scope"]
+          shared_grade_id?: string | null
         }
         Relationships: [
           {
@@ -560,6 +650,13 @@ export type Database = {
             columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_shared_grade_id_fkey"
+            columns: ["shared_grade_id"]
+            isOneToOne: false
+            referencedRelation: "grades"
             referencedColumns: ["id"]
           },
         ]
@@ -807,6 +904,14 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "professeur" | "eleve" | "cpe"
+      call_category:
+        | "bavardages"
+        | "oubli_materiel"
+        | "travail_non_fait"
+        | "refus_travail"
+        | "insolence"
+        | "comportement_irrespectueux"
+        | "encouragement"
       incident_severity: "mineur" | "moyen" | "grave"
       post_scope: "class" | "school"
     }
@@ -937,6 +1042,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "professeur", "eleve", "cpe"],
+      call_category: [
+        "bavardages",
+        "oubli_materiel",
+        "travail_non_fait",
+        "refus_travail",
+        "insolence",
+        "comportement_irrespectueux",
+        "encouragement",
+      ],
       incident_severity: ["mineur", "moyen", "grave"],
       post_scope: ["class", "school"],
     },
