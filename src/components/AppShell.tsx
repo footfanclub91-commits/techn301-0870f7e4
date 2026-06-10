@@ -14,6 +14,8 @@ import {
   NotebookPen,
   MessageSquare,
   Search,
+  ClipboardCheck,
+  FileText,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -43,6 +45,8 @@ export function AppShell({ children }: { children: ReactNode }) {
     { to: "/cahier-de-textes", label: "Cahier de textes", icon: NotebookPen, show: true },
     { to: "/devoirs", label: "Devoirs", icon: BookOpen, show: true },
     { to: "/notes", label: "Notes", icon: GraduationCap, show: true },
+    { to: "/bulletins", label: "Bulletins", icon: FileText, show: true },
+    { to: "/appel", label: "Liste d'appel", icon: ClipboardCheck, show: isAdmin || isProf || isCpe },
     { to: "/classes", label: "Classes", icon: School, show: true },
     { to: "/discipline", label: "Vie scolaire", icon: AlertTriangle, show: isAdmin || isCpe || isProf },
     { to: "/admin", label: "Administration", icon: Settings, show: isAdmin },
