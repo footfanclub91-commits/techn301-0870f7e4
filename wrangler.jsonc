@@ -1,15 +1,10 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+{
   "name": "techn301",
+  "main": "dist/server/server.js",
   "compatibility_date": "2026-06-10",
-  "observability": {
-    "enabled": true
-  },
-  "main": "dist/server/index.mjs",
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "dist/client"
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  }
 }
