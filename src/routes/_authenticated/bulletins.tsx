@@ -255,7 +255,7 @@ function EditDialog({
         author_id: user.id,
         period,
         general_appreciation: general || null,
-        subjects: subjects as unknown as object,
+        subjects: subjects as unknown as import("@/integrations/supabase/types").Json,
         published,
       };
       if (initial.id) {
