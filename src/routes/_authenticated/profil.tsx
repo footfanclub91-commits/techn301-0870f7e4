@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, User as UserIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useMyProfile, useMyRoles } from "@/hooks/use-profile";
+import { useSignedUrl } from "@/hooks/use-signed-url";
 import { PageHeader } from "@/components/AppShell";
 import { SignedImage } from "@/components/SignedImage";
 import { BannerUpload } from "@/components/BannerUpload";
+import { AvatarUpload } from "@/components/AvatarUpload";
+import { UserAvatar } from "@/components/UserAvatar";
+import { ImageLightbox } from "@/components/ImageLightbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,9 +32,11 @@ function Page() {
 
   const [fullName, setFullName] = useState<string | null>(null);
   const [bio, setBio] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState(false);
+  const { data: bannerUrl } = useSignedUrl(profile?.banner_url);
 
   const update = useMutation({
-    mutationFn: async (patch: Partial<{ full_name: string; bio: string; banner_url: string; allow_animations: boolean }>) => {
+    mutationFn: async (patch: Partial<{ full_name: string; bio: string; banner_url: string; avatar_url: string; allow_animations: boolean }>) => {
       if (!user) return;
       const { error } = await supabase.from("profiles").update(patch).eq("id", user.id);
       if (error) throw error;
@@ -53,14 +59,22 @@ function Page() {
 
       <article className="glass overflow-hidden rounded-3xl">
         <div className="relative h-48 w-full overflow-hidden md:h-64">
-          <SignedImage path={profile?.banner_url} alt="Bannière" className="h-full w-full object-cover" fallbackClassName="h-full w-full" />
+          <button
+            type="button"
+            onClick={() => profile?.banner_url && setLightbox(true)}
+            className="block h-full w-full"
+            aria-label="Voir la bannière en grand"
+          >
+            <SignedImage path={profile?.banner_url} alt="Bannière" className="h-full w-full object-cover" fallbackClassName="h-full w-full" />
+          </button>
           <div className="absolute right-4 top-4">
             <BannerUpload userId={user.id} onUploaded={(path) => update.mutate({ banner_url: path })} />
           </div>
         </div>
         <div className="-mt-12 flex flex-col items-start gap-4 p-6 md:flex-row md:items-end">
-          <div className="glass flex size-24 items-center justify-center rounded-3xl text-3xl font-semibold">
-            {(profile?.full_name || user.email || "?").charAt(0).toUpperCase()}
+          <div className="flex flex-col items-center gap-2">
+            <UserAvatar path={profile?.avatar_url} name={profile?.full_name ?? user.email} size="xl" className="ring-4 ring-background" />
+            <AvatarUpload userId={user.id} onUploaded={(path) => update.mutate({ avatar_url: path })} />
           </div>
           <div className="flex-1">
             <h2 className="text-2xl font-semibold">{profile?.full_name || user.email}</h2>
@@ -72,6 +86,8 @@ function Page() {
           </div>
         </div>
       </article>
+
+      <ImageLightbox url={lightbox ? bannerUrl ?? null : null} alt="Bannière" onClose={() => setLightbox(false)} />
 
       <section className="mt-6 glass rounded-2xl p-6">
         <h3 className="mb-4 text-lg font-semibold">Informations</h3>
