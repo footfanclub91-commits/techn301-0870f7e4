@@ -59,7 +59,7 @@ function FeedBody({ scope, classId }: { scope: Scope; classId: string | null }) 
       let q = supabase
         .from("posts")
         .select(
-          "*, profiles!posts_author_profile_fkey(full_name), likes(user_id), reposts(user_id), comments(id, content, created_at, author_id, profiles!comments_author_profile_fkey(full_name))",
+          "*, profiles!posts_author_profile_fkey(full_name), shared_grade:grades(id, value, max_value, label, date, subjects(name, color)), likes(user_id), reposts(user_id), comments(id, content, created_at, author_id, profiles!comments_author_profile_fkey(full_name))",
         )
         .order("created_at", { ascending: false })
         .limit(50);
