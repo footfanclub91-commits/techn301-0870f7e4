@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { GraduationCap, Plus, Loader2 } from "lucide-react";
+import { GraduationCap, Plus, Loader2, Share2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useMyRoles, hasRole } from "@/hooks/use-profile";
@@ -11,6 +11,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/notes")({
@@ -34,6 +36,32 @@ function NotesPage() {
   const { user } = useAuth();
   const { data: roles } = useMyRoles(user?.id);
   const isTeacher = hasRole(roles, "professeur") || hasRole(roles, "admin");
+  const [share, setShare] = useState<GradeRow | null>(null);
+  const [shareText, setShareText] = useState("");
+  const [shareScope, setShareScope] = useState<"school" | "class">("class");
+  const qc = useQueryClient();
+
+  const shareMutation = useMutation({
+    mutationFn: async () => {
+      if (!user || !share) return;
+      const { data: prof } = await supabase.from("profiles").select("class_id").eq("id", user.id).maybeSingle();
+      const { error } = await supabase.from("posts").insert({
+        author_id: user.id,
+        content: shareText.trim() || `J'ai partagé une note en ${share.subjects?.name ?? ""} !`,
+        scope: shareScope,
+        class_id: shareScope === "class" ? prof?.class_id ?? null : null,
+        shared_grade_id: share.id,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Note partagée sur le fil");
+      qc.invalidateQueries({ queryKey: ["posts"] });
+      setShare(null);
+      setShareText("");
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Erreur"),
+  });
 
   const { data: grades, isLoading } = useQuery({
     queryKey: ["grades", user?.id],
@@ -111,7 +139,17 @@ function NotesPage() {
                 {s.grades.map((g) => (
                   <li key={g.id} className="flex items-center justify-between border-t border-border/60 pt-1.5 first:border-0 first:pt-0">
                     <span className="text-muted-foreground">{g.label || "Évaluation"} <span className="text-xs">×{g.coefficient}</span></span>
-                    <span className="font-medium">{g.value}/{g.max_value}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{g.value}/{g.max_value}</span>
+                      <button
+                        onClick={() => setShare(g)}
+                        className="text-muted-foreground transition-colors hover:text-primary"
+                        aria-label="Partager"
+                        title="Partager sur le fil"
+                      >
+                        <Share2 className="size-3.5" />
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -146,6 +184,46 @@ function NotesPage() {
           </table>
         </div>
       )}
+
+      <Dialog open={!!share} onOpenChange={(o) => { if (!o) setShare(null); }}>
+        <DialogContent className="glass-strong">
+          <DialogHeader><DialogTitle>Partager cette note</DialogTitle></DialogHeader>
+          {share && (
+            <div className="space-y-3">
+              <div className="rounded-xl bg-secondary/50 p-3 text-sm">
+                <p className="font-semibold">{share.subjects?.name} — {share.label || "Évaluation"}</p>
+                <p className="text-lg">{share.value}/{share.max_value}</p>
+              </div>
+              <div>
+                <Label>Message</Label>
+                <Textarea
+                  rows={3}
+                  className="glass-input"
+                  placeholder="Une appréciation à partager…"
+                  value={shareText}
+                  onChange={(e) => setShareText(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Visibilité</Label>
+                <Select value={shareScope} onValueChange={(v) => setShareScope(v as "school" | "class")}>
+                  <SelectTrigger className="glass-input"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="class">Ma classe</SelectItem>
+                    <SelectItem value="school">Tout l'établissement</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setShare(null)}>Annuler</Button>
+            <Button onClick={() => shareMutation.mutate()} disabled={shareMutation.isPending}>
+              {shareMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}Partager
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
