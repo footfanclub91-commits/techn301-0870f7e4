@@ -239,6 +239,22 @@ function PostCard({
         </div>
       </header>
       <p className="whitespace-pre-wrap text-sm leading-relaxed">{p.content}</p>
+      {p.shared_grade && (
+        <div className="mt-3 rounded-xl border border-border/60 bg-secondary/40 p-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase text-muted-foreground">Note partagée</p>
+              <p className="text-sm font-semibold">
+                {p.shared_grade.subjects?.name ?? "Matière"}
+                {p.shared_grade.label ? ` — ${p.shared_grade.label}` : ""}
+              </p>
+            </div>
+            <span className="text-lg font-semibold">
+              {p.shared_grade.value}<span className="text-xs text-muted-foreground">/{p.shared_grade.max_value}</span>
+            </span>
+          </div>
+        </div>
+      )}
       <footer className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
         <button onClick={onLike} className="flex items-center gap-1.5 transition-colors hover:text-primary" aria-label="J'aime">
           <Heart className={`size-4 ${liked ? "fill-primary text-primary" : ""}`} />
