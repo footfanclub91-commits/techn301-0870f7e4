@@ -21,6 +21,7 @@ import { Route as AuthenticatedDisciplineRouteImport } from './routes/_authentic
 import { Route as AuthenticatedDevoirsRouteImport } from './routes/_authenticated/devoirs'
 import { Route as AuthenticatedClassesRouteImport } from './routes/_authenticated/classes'
 import { Route as AuthenticatedCahierDeTextesRouteImport } from './routes/_authenticated/cahier-de-textes'
+import { Route as AuthenticatedAnnuaireRouteImport } from './routes/_authenticated/annuaire'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const AuthRoute = AuthRouteImport.update({
@@ -84,6 +85,11 @@ const AuthenticatedCahierDeTextesRoute =
     path: '/cahier-de-textes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnnuaireRoute = AuthenticatedAnnuaireRouteImport.update({
+  id: '/annuaire',
+  path: '/annuaire',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/annuaire': typeof AuthenticatedAnnuaireRoute
   '/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/classes': typeof AuthenticatedClassesRoute
   '/devoirs': typeof AuthenticatedDevoirsRoute
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/annuaire': typeof AuthenticatedAnnuaireRoute
   '/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/classes': typeof AuthenticatedClassesRoute
   '/devoirs': typeof AuthenticatedDevoirsRoute
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/annuaire': typeof AuthenticatedAnnuaireRoute
   '/_authenticated/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/_authenticated/classes': typeof AuthenticatedClassesRoute
   '/_authenticated/devoirs': typeof AuthenticatedDevoirsRoute
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
+    | '/annuaire'
     | '/cahier-de-textes'
     | '/classes'
     | '/devoirs'
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
+    | '/annuaire'
     | '/cahier-de-textes'
     | '/classes'
     | '/devoirs'
@@ -169,6 +180,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
+    | '/_authenticated/annuaire'
     | '/_authenticated/cahier-de-textes'
     | '/_authenticated/classes'
     | '/_authenticated/devoirs'
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCahierDeTextesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/annuaire': {
+      id: '/_authenticated/annuaire'
+      path: '/annuaire'
+      fullPath: '/annuaire'
+      preLoaderRoute: typeof AuthenticatedAnnuaireRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -284,6 +303,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAnnuaireRoute: typeof AuthenticatedAnnuaireRoute
   AuthenticatedCahierDeTextesRoute: typeof AuthenticatedCahierDeTextesRoute
   AuthenticatedClassesRoute: typeof AuthenticatedClassesRoute
   AuthenticatedDevoirsRoute: typeof AuthenticatedDevoirsRoute
@@ -297,6 +317,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAnnuaireRoute: AuthenticatedAnnuaireRoute,
   AuthenticatedCahierDeTextesRoute: AuthenticatedCahierDeTextesRoute,
   AuthenticatedClassesRoute: AuthenticatedClassesRoute,
   AuthenticatedDevoirsRoute: AuthenticatedDevoirsRoute,
@@ -319,3 +340,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
