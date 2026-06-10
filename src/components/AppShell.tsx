@@ -13,6 +13,7 @@ import {
   CalendarDays,
   NotebookPen,
   MessageSquare,
+  Search,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -20,6 +21,7 @@ import { useMyProfile, useMyRoles, hasRole } from "@/hooks/use-profile";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ChangePasswordGate } from "@/components/ChangePasswordGate";
+import { UserAvatar } from "@/components/UserAvatar";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -36,6 +38,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const nav = [
     { to: "/feed", label: "Fil d'actualité", icon: Home, show: true },
     { to: "/messages", label: "Messages", icon: MessageSquare, show: true },
+    { to: "/annuaire", label: "Annuaire", icon: Search, show: true },
     { to: "/emploi-du-temps", label: "Emploi du temps", icon: CalendarDays, show: true },
     { to: "/cahier-de-textes", label: "Cahier de textes", icon: NotebookPen, show: true },
     { to: "/devoirs", label: "Devoirs", icon: BookOpen, show: true },
@@ -49,8 +52,6 @@ export function AppShell({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     router.navigate({ to: "/auth", replace: true });
   }
-
-  const initial = (profile?.full_name || user?.email || "?").charAt(0).toUpperCase();
 
   if (mustChangePassword) {
     return <ChangePasswordGate />;
@@ -95,9 +96,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               to="/profil"
               className="flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-secondary"
             >
-              <div className="flex size-9 items-center justify-center rounded-full bg-accent/30 text-sm font-semibold">
-                {initial}
-              </div>
+              <UserAvatar path={profile?.avatar_url} name={profile?.full_name ?? user?.email} size="md" />
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{profile?.full_name || "Mon profil"}</p>
                 <p className="truncate text-xs text-muted-foreground">
