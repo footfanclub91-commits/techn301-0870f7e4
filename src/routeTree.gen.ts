@@ -21,7 +21,9 @@ import { Route as AuthenticatedDisciplineRouteImport } from './routes/_authentic
 import { Route as AuthenticatedDevoirsRouteImport } from './routes/_authenticated/devoirs'
 import { Route as AuthenticatedClassesRouteImport } from './routes/_authenticated/classes'
 import { Route as AuthenticatedCahierDeTextesRouteImport } from './routes/_authenticated/cahier-de-textes'
+import { Route as AuthenticatedAnnuaireRouteImport } from './routes/_authenticated/annuaire'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedUUserIdRouteImport } from './routes/_authenticated/u.$userId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -84,9 +86,19 @@ const AuthenticatedCahierDeTextesRoute =
     path: '/cahier-de-textes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnnuaireRoute = AuthenticatedAnnuaireRouteImport.update({
+  id: '/annuaire',
+  path: '/annuaire',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedUUserIdRoute = AuthenticatedUUserIdRouteImport.update({
+  id: '/u/$userId',
+  path: '/u/$userId',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
@@ -94,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/annuaire': typeof AuthenticatedAnnuaireRoute
   '/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/classes': typeof AuthenticatedClassesRoute
   '/devoirs': typeof AuthenticatedDevoirsRoute
@@ -103,11 +116,13 @@ export interface FileRoutesByFullPath {
   '/messages': typeof AuthenticatedMessagesRoute
   '/notes': typeof AuthenticatedNotesRoute
   '/profil': typeof AuthenticatedProfilRoute
+  '/u/$userId': typeof AuthenticatedUUserIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/annuaire': typeof AuthenticatedAnnuaireRoute
   '/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/classes': typeof AuthenticatedClassesRoute
   '/devoirs': typeof AuthenticatedDevoirsRoute
@@ -117,6 +132,7 @@ export interface FileRoutesByTo {
   '/messages': typeof AuthenticatedMessagesRoute
   '/notes': typeof AuthenticatedNotesRoute
   '/profil': typeof AuthenticatedProfilRoute
+  '/u/$userId': typeof AuthenticatedUUserIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -124,6 +140,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/annuaire': typeof AuthenticatedAnnuaireRoute
   '/_authenticated/cahier-de-textes': typeof AuthenticatedCahierDeTextesRoute
   '/_authenticated/classes': typeof AuthenticatedClassesRoute
   '/_authenticated/devoirs': typeof AuthenticatedDevoirsRoute
@@ -133,6 +150,7 @@ export interface FileRoutesById {
   '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/notes': typeof AuthenticatedNotesRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
+  '/_authenticated/u/$userId': typeof AuthenticatedUUserIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,6 +158,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
+    | '/annuaire'
     | '/cahier-de-textes'
     | '/classes'
     | '/devoirs'
@@ -149,11 +168,13 @@ export interface FileRouteTypes {
     | '/messages'
     | '/notes'
     | '/profil'
+    | '/u/$userId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/admin'
+    | '/annuaire'
     | '/cahier-de-textes'
     | '/classes'
     | '/devoirs'
@@ -163,12 +184,14 @@ export interface FileRouteTypes {
     | '/messages'
     | '/notes'
     | '/profil'
+    | '/u/$userId'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
+    | '/_authenticated/annuaire'
     | '/_authenticated/cahier-de-textes'
     | '/_authenticated/classes'
     | '/_authenticated/devoirs'
@@ -178,6 +201,7 @@ export interface FileRouteTypes {
     | '/_authenticated/messages'
     | '/_authenticated/notes'
     | '/_authenticated/profil'
+    | '/_authenticated/u/$userId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -272,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCahierDeTextesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/annuaire': {
+      id: '/_authenticated/annuaire'
+      path: '/annuaire'
+      fullPath: '/annuaire'
+      preLoaderRoute: typeof AuthenticatedAnnuaireRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -279,11 +310,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/u/$userId': {
+      id: '/_authenticated/u/$userId'
+      path: '/u/$userId'
+      fullPath: '/u/$userId'
+      preLoaderRoute: typeof AuthenticatedUUserIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAnnuaireRoute: typeof AuthenticatedAnnuaireRoute
   AuthenticatedCahierDeTextesRoute: typeof AuthenticatedCahierDeTextesRoute
   AuthenticatedClassesRoute: typeof AuthenticatedClassesRoute
   AuthenticatedDevoirsRoute: typeof AuthenticatedDevoirsRoute
@@ -293,10 +332,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedNotesRoute: typeof AuthenticatedNotesRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
+  AuthenticatedUUserIdRoute: typeof AuthenticatedUUserIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAnnuaireRoute: AuthenticatedAnnuaireRoute,
   AuthenticatedCahierDeTextesRoute: AuthenticatedCahierDeTextesRoute,
   AuthenticatedClassesRoute: AuthenticatedClassesRoute,
   AuthenticatedDevoirsRoute: AuthenticatedDevoirsRoute,
@@ -306,6 +347,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedNotesRoute: AuthenticatedNotesRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
+  AuthenticatedUUserIdRoute: AuthenticatedUUserIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

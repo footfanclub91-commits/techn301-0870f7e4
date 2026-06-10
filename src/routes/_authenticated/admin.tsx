@@ -21,9 +21,11 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function Page() {
   const { user } = useAuth();
-  const { data: roles, isLoading: rolesLoading } = useMyRoles(user?.id);
+  const { data: roles, isLoading: rolesLoading, isFetched } = useMyRoles(user?.id);
 
-  if (rolesLoading) return <div className="flex justify-center py-12"><Loader2 className="size-5 animate-spin" /></div>;
+  if (!user || rolesLoading || !isFetched) {
+    return <div className="flex justify-center py-12"><Loader2 className="size-5 animate-spin" /></div>;
+  }
   if (!hasRole(roles, "admin")) {
     throw redirect({ to: "/feed" });
   }
