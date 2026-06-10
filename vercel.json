@@ -2,6 +2,7 @@
   "outputDirectory": "dist/client",
   "buildCommand": "npm run build",
   "rewrites": [
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
