@@ -6,7 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { useMyProfile } from "@/hooks/use-profile";
+import { useMyProfile, useMyRoles, hasRole } from "@/hooks/use-profile";
 import { PageHeader } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -121,6 +121,18 @@ function FeedBody({ scope, classId }: { scope: Scope; classId: string | null }) 
     onError: () => toast.error("Republication impossible pour le moment. Réessayez."),
   });
 
+  const deletePost = useMutation({
+    mutationFn: async (postId: string) => {
+      const { error } = await supabase.from("posts").delete().eq("id", postId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["posts"] });
+      toast.success("Publication supprimée");
+    },
+    onError: () => toast.error("Suppression impossible."),
+  });
+
   return (
     <div className="space-y-4">
       <form
@@ -164,6 +176,7 @@ function FeedBody({ scope, classId }: { scope: Scope; classId: string | null }) 
               reposted={reposted}
               onLike={() => toggleLike.mutate({ postId: p.id, liked })}
               onRepost={() => toggleRepost.mutate({ postId: p.id, reposted })}
+              onDelete={() => deletePost.mutate(p.id)}
             />
           );
         })
@@ -178,14 +191,17 @@ function PostCard({
   reposted,
   onLike,
   onRepost,
+  onDelete,
 }: {
   post: any;
   liked: boolean;
   reposted: boolean;
   onLike: () => void;
   onRepost: () => void;
+  onDelete?: () => void;
 }) {
   const { user } = useAuth();
+  const { data: roles } = useMyRoles(user?.id);
   const qc = useQueryClient();
   const [showComments, setShowComments] = useState(false);
   const [comment, setComment] = useState("");
@@ -220,6 +236,8 @@ function PostCard({
     (a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
   );
 
+  const canDeletePost = p.author_id === user?.id || hasRole(roles, "admin");
+
   return (
     <article className="glass rounded-2xl p-5">
       {(p.reposts?.length ?? 0) > 0 && (
@@ -227,16 +245,23 @@ function PostCard({
           <Repeat2 className="size-3.5" /> Republié {p.reposts.length} fois
         </p>
       )}
-      <header className="mb-3 flex items-center gap-3">
-        <div className="flex size-10 items-center justify-center rounded-full bg-accent/30 text-sm font-semibold">
-          {(p.profiles?.full_name || "?").charAt(0).toUpperCase()}
+      <header className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-full bg-accent/30 text-sm font-semibold">
+            {(p.profiles?.full_name || "?").charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <p className="text-sm font-semibold">{p.profiles?.full_name || "Utilisateur"}</p>
+            <p className="text-xs text-muted-foreground">
+              {formatDistanceToNow(new Date(p.created_at), { addSuffix: true, locale: fr })}
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-semibold">{p.profiles?.full_name || "Utilisateur"}</p>
-          <p className="text-xs text-muted-foreground">
-            {formatDistanceToNow(new Date(p.created_at), { addSuffix: true, locale: fr })}
-          </p>
-        </div>
+        {canDeletePost && onDelete && (
+          <button onClick={onDelete} aria-label="Supprimer la publication" className="text-muted-foreground hover:text-destructive">
+            <Trash2 className="size-4" />
+          </button>
+        )}
       </header>
       <p className="whitespace-pre-wrap text-sm leading-relaxed">{p.content}</p>
       {p.shared_grade && (
