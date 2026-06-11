@@ -176,6 +176,7 @@ function FeedBody({ scope, classId }: { scope: Scope; classId: string | null }) 
               reposted={reposted}
               onLike={() => toggleLike.mutate({ postId: p.id, liked })}
               onRepost={() => toggleRepost.mutate({ postId: p.id, reposted })}
+              onDelete={() => deletePost.mutate(p.id)}
             />
           );
         })
