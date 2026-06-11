@@ -121,6 +121,18 @@ function FeedBody({ scope, classId }: { scope: Scope; classId: string | null }) 
     onError: () => toast.error("Republication impossible pour le moment. Réessayez."),
   });
 
+  const deletePost = useMutation({
+    mutationFn: async (postId: string) => {
+      const { error } = await supabase.from("posts").delete().eq("id", postId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["posts"] });
+      toast.success("Publication supprimée");
+    },
+    onError: () => toast.error("Suppression impossible."),
+  });
+
   return (
     <div className="space-y-4">
       <form
