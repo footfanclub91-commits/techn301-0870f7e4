@@ -24,6 +24,11 @@ export const Route = createFileRoute("/_authenticated/discipline")({
 const severityColor = { mineur: "text-success", moyen: "text-warning", grave: "text-destructive" } as const;
 
 function Page() {
+  const { user } = useAuth();
+  const { data: roles } = useMyRoles(user?.id);
+  const isStaff = hasRole(roles, "professeur") || hasRole(roles, "admin") || hasRole(roles, "cpe");
+  const qc = useQueryClient();
+
   const { data: incidents, isLoading } = useQuery({
     queryKey: ["incidents"],
     queryFn: async () => {
@@ -36,9 +41,25 @@ function Page() {
     },
   });
 
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("incidents").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Incident supprimé");
+      qc.invalidateQueries({ queryKey: ["incidents"] });
+    },
+    onError: () => toast.error("Suppression impossible."),
+  });
+
   return (
     <div>
-      <PageHeader title="Vie scolaire" description="Suivi des incidents et observations disciplinaires." action={<NewIncidentDialog />} />
+      <PageHeader
+        title="Vie scolaire"
+        description="Suivi des incidents et observations disciplinaires."
+        action={isStaff && <NewIncidentDialog />}
+      />
 
       {isLoading ? (
         <div className="flex justify-center py-12"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div>
@@ -59,6 +80,11 @@ function Page() {
                   </p>
                   {i.description && <p className="mt-2 text-sm">{i.description}</p>}
                 </div>
+                {(i.author_id === user?.id || hasRole(roles, "admin")) && (
+                  <button onClick={() => remove.mutate(i.id)} aria-label="Supprimer l'incident">
+                    <Trash2 className="size-4 text-muted-foreground hover:text-destructive" />
+                  </button>
+                )}
               </div>
             </article>
           ))}
