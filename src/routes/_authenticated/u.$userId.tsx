@@ -50,18 +50,18 @@ function Page() {
         <ArrowLeft className="size-4" /> Retour à l'annuaire
       </Link>
 
-      <article className="glass overflow-hidden rounded-3xl">
+      <article className="glass rounded-3xl">
         <button
           type="button"
           onClick={() => data.banner_url && setLightbox(true)}
-          className="relative block h-48 w-full overflow-hidden md:h-64"
+          className="relative block h-48 w-full overflow-hidden rounded-t-3xl md:h-64"
           aria-label="Voir la bannière en grand"
         >
           <SignedImage path={data.banner_url} alt="Bannière" className="h-full w-full object-cover" fallbackClassName="h-full w-full" />
         </button>
-        <div className="-mt-12 flex flex-col items-start gap-4 p-6 md:flex-row md:items-end">
-          <UserAvatar path={data.avatar_url} name={data.full_name} size="xl" className="ring-4 ring-background" />
-          <div className="flex-1">
+        <div className="relative -mt-20 flex flex-col items-start gap-4 p-6 md:flex-row md:items-end">
+          <UserAvatar path={data.avatar_url} name={data.full_name} size="xl" className="relative z-10 ring-4 ring-background" />
+          <div className="flex-1 md:pb-1">
             <h1 className="text-2xl font-semibold">{data.full_name}</h1>
             <p className="text-sm text-muted-foreground">
               {role}{data.classes?.name ? ` · ${data.classes.name}` : ""}
