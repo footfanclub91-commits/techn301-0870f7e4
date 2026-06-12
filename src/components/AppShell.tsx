@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ChangePasswordGate } from "@/components/ChangePasswordGate";
 import { UserAvatar } from "@/components/UserAvatar";
+import { WelcomeTour } from "@/components/WelcomeTour";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -130,6 +131,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {/* Main */}
         <main className="min-w-0 flex-1 animate-float-in">{children}</main>
       </div>
+      <WelcomeTour userId={user?.id} />
     </div>
   );
 }
