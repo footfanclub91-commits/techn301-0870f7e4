@@ -57,8 +57,8 @@ function Page() {
     <div>
       <PageHeader title="Mon profil" description="Personnalise ta page : bannière (JPG, PNG, WebP, GIF animé) et présentation." />
 
-      <article className="glass overflow-hidden rounded-3xl">
-        <div className="relative h-48 w-full overflow-hidden md:h-64">
+      <article className="glass rounded-3xl">
+        <div className="relative h-48 w-full overflow-hidden rounded-t-3xl md:h-64">
           <button
             type="button"
             onClick={() => profile?.banner_url && setLightbox(true)}
@@ -71,12 +71,12 @@ function Page() {
             <BannerUpload userId={user.id} onUploaded={(path) => update.mutate({ banner_url: path })} />
           </div>
         </div>
-        <div className="-mt-12 flex flex-col items-start gap-4 p-6 md:flex-row md:items-end">
-          <div className="flex flex-col items-center gap-2">
+        <div className="relative -mt-20 flex flex-col items-start gap-4 p-6 md:flex-row md:items-end">
+          <div className="relative z-10 flex flex-col items-center gap-2">
             <UserAvatar path={profile?.avatar_url} name={profile?.full_name ?? user.email} size="xl" className="ring-4 ring-background" />
             <AvatarUpload userId={user.id} onUploaded={(path) => update.mutate({ avatar_url: path })} />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 md:pb-1">
             <h2 className="text-2xl font-semibold">{profile?.full_name || user.email}</h2>
             <p className="text-sm text-muted-foreground">
               {roles?.includes("admin") ? "Administrateur" :
